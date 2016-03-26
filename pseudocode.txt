@@ -1,0 +1,88 @@
+Run Loop of the Program
+-Read the input file and convert it into the knowledge base
+-Negate the fact to be proven, and add it to the knowledge base
+-Run resolution rule on knowledge base until a contradiction is given
+
+class Literal{
+		string Name holds the literal's name
+		boolean Negated is true if the literal is negated in this instance of the Literal
+}
+
+class Clause{
+	ArrayList<Literal> Literals contains the literals which for the clause
+		the disjunctions are implied
+	
+	Literal[2] Parents contain the parents of the Clause
+		will contain the 2 clauses resolved to form the clause if Clause was formed via resolution
+		otherwise null
+	
+	void addLit(Literal) adds a literal to the clause. Allows us to read in a line of 		input and dynamically increase the size of the Clause
+}
+
+class KnowledgeBase{
+	ArrayList<Clause> KnowledgeBase
+	void add(Clause) adds a clause to Knowledge
+	boolean Prove() proves whatever we're trying to prove using the KB and resolution rule {
+		loop{
+			for Clause1 in Knowledge Base{
+				for Clause2 in Knowledge Base {
+					if the two clauses share a Literal with the same Name, but opposite Negated {
+						proven = Resolve(Clause 1, Clause 2)
+						if proven{
+							return true
+						}
+					}
+				}
+			}
+			if there are no two Clauses to negate {
+				return false
+			}
+		}
+
+	}
+
+	boolean Resolve(Clause, Clause){
+		String shared is the name of the first literal shared between the two
+			can probably just do this by and-ing the two ArrayLists
+			gotta make sure this is just one literal
+
+		Clause c = new Clause
+
+		for Literal in Clause1 name != shared
+			c.add(Literal)
+
+		for Literal in Clause2 name != shared
+			c.add(Literal)
+
+		if c.isEmpty()
+			return true
+
+		else
+			c.Parents = [Clause1, Clause2]
+			add c to Knowledge Base
+			return false
+
+	}
+}
+
+public static void main(){
+	open input file
+	KnowledgeBase k = new KnowledgeBase
+	for line in input file{
+		split by spaces
+		Clause c = new clause
+		for string in split line{
+			Literal l = new literal
+			if first character of string is ~{
+				l.Negated = true
+				remove the ~
+			}
+			l.name = that string
+			c.add(l)
+		}
+		k.add(c)
+	}
+
+	
+
+}
