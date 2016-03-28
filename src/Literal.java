@@ -20,6 +20,10 @@ public class Literal {
         return new Literal(this.name, !this.negated);
     }
     
+    public boolean equals(Literal other) {
+        return this.name.equals(other.name) && this.negated == other.negated;
+    }
+    
     @Override
     public String toString() {
         if(negated) {
