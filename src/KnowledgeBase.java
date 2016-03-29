@@ -35,18 +35,22 @@ public class KnowledgeBase {
                     Clause second = inner.next();
                     
                     if(Clause.resolvable(first, second) && !isResolved(first, second)) {
+                        // System.out.println(String.format("Resolving: %s and %s", first, second));
                         Clause child = resolve(first, second);
-                        knowledge.add(child);
-                        clauseSelectionOrder.add(child);
-                        resolved.add(new Pair(this.knowledge.indexOf(first) + 1,
-                                this.knowledge.indexOf(second) + 1));
-                        if(child.isFail()) {
-                            return true;
+                        
+                        if(!knowledge.contains(child)) {
+                            knowledge.add(child);
+                            clauseSelectionOrder.add(child);
+                            resolved.add(new Pair(this.knowledge.indexOf(first) + 1,
+                                    this.knowledge.indexOf(second) + 1));
+                            if(child.isFail()) {
+                                return true;
+                            }
+                            // reset iterator since a new value has been inserted
+                            outer = clauseSelectionOrder.iterator();
+                            inner = clauseSelectionOrder.iterator();
+                            break;
                         }
-                        // reset iterator since a new value has been inserted
-                        outer = clauseSelectionOrder.iterator();
-                        inner = clauseSelectionOrder.iterator();
-                        break;
                     }
                 }
                 if(proven) {

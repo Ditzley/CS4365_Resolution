@@ -77,4 +77,10 @@ public class Clause implements Comparable<Clause> {
     public int compareTo(Clause other) {
         return Integer.compare(this.size, other.size);
     }
+    
+    @Override
+    public boolean equals(Object other) {
+        Clause that = (Clause) other;
+        return this.literals.equals(that.literals);
+    }
 }

@@ -55,8 +55,11 @@ public class Resolver {
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(outFile));
                 
-                kb.printSolutionTree(bw);
-                
+                if(proven) {
+                    kb.printSolutionTree(bw);
+                } else {
+                    bw.write("Failure\n");
+                }
                 bw.close();
                 
             } catch(IOException e) {
