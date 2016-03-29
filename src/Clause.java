@@ -27,7 +27,7 @@ public class Clause implements Comparable<Clause> {
         }
         String name = sb.toString();
         if(this.size == 0) {
-            name = "Fail";
+            name = "False";
         }
         if(this.parents == null) {
             return String.format("%s {}", name);

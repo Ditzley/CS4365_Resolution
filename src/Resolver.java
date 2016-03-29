@@ -1,8 +1,12 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class Resolver {
+    
+    static boolean saveSolution = true; // change to false to prevent saving to file
     
     public static void main(String[] args) {
         if(args.length != 1) {
@@ -11,9 +15,9 @@ public class Resolver {
         
         KnowledgeBase kb = new KnowledgeBase();
         
-        String file = args[0];
+        String inFile = args[0];
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            BufferedReader br = new BufferedReader(new FileReader(inFile));
             String line;
             while((line = br.readLine()) != null) {
                 Clause clause = new Clause();
@@ -41,9 +45,23 @@ public class Resolver {
         
         boolean proven = kb.prove();
         if(proven) {
-            kb.print();
+            kb.printSolutionTree();
         } else {
             System.out.println("Failure");
+        }
+        
+        if(saveSolution) {
+            String outFile = inFile.replace(".in", ".out");
+            try {
+                BufferedWriter bw = new BufferedWriter(new FileWriter(outFile));
+                
+                kb.printSolutionTree(bw);
+                
+                bw.close();
+                
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     

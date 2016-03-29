@@ -1,7 +1,10 @@
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.PriorityQueue;
+import java.util.TreeMap;
 
 public class KnowledgeBase {
     private ArrayList<Clause> knowledge; // order based on input
@@ -81,16 +84,50 @@ public class KnowledgeBase {
         return c;
     }
     
-    // naive, simply prints all clauses in order
-    // should change to print only those that were necessary
-    public void print() {
-        int i = 1;
-        for(Clause c : knowledge) {
-            System.out.println(String.format("%d. %s", i, c.toString()));
-            i++;
+    
+    // print the path to the solution
+    public void printSolutionTree() {
+        Clause last = this.knowledge.get(this.knowledge.size() - 1);
+        TreeMap<Integer, Clause> tree = new TreeMap<Integer, Clause>();
+        tree.put(this.knowledge.size(), last);
+        this.addParents(last, tree);
+        
+        for(int index : tree.keySet()) {
+            System.out.println(String.format("%d. %s", index, tree.get(index)));
         }
         System.out.println(String.format("Size of final clause set: %d", knowledge.size()));
     }
+    
+    
+    public void printSolutionTree(BufferedWriter bw) throws IOException {
+        Clause last = this.knowledge.get(this.knowledge.size() - 1);
+        TreeMap<Integer, Clause> tree = new TreeMap<Integer, Clause>();
+        tree.put(this.knowledge.size(), last);
+        this.addParents(last, tree);
+        
+        for(int index : tree.keySet()) {
+            bw.write(String.format("%d. %s\n", index, tree.get(index)));
+        }
+        bw.write(String.format("Size of final clause set: %d\n", knowledge.size()));
+    }
+    
+    // recursively adds the parents of a clause to the solution tree
+    public void addParents(Clause clause, TreeMap<Integer, Clause> tree) {
+        if(clause.getParents() == null) {
+            return;
+        } else {
+            int[] parents = clause.getParents();
+            
+            Clause mother = this.knowledge.get(parents[0] - 1);
+            tree.put(parents[0], mother);
+            this.addParents(mother, tree);
+            
+            Clause father = this.knowledge.get(parents[1] - 1);
+            tree.put(parents[1], father);
+            this.addParents(father, tree);
+        }
+    }
+    
     
     public boolean isResolved(Clause first, Clause second) {
         Pair n = new Pair(this.knowledge.indexOf(first) + 1, this.knowledge.indexOf(second) + 1);
@@ -117,4 +154,5 @@ public class KnowledgeBase {
                     || (this.x == other.y && this.y == other.x);
         }
     }
+    
 }
