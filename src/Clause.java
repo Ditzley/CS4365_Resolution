@@ -4,6 +4,7 @@ public class Clause implements Comparable<Clause> {
     private HashSet<Literal> literals; // elements redundancies, order isn't important
     private int[] parents;
     private int size;
+    private boolean isTrue = false;
     
     public Clause() {
         this.literals = new HashSet<Literal>();
@@ -66,6 +67,17 @@ public class Clause implements Comparable<Clause> {
     
     public boolean isFail() {
         return this.size == 0;
+    }
+    
+    public boolean isTrue() {
+        for(Literal lit1 : literals) {
+            for(Literal lit2 : literals) {
+                if(lit1.getOpposite().equals(lit2)) {
+                    isTrue = true;
+                }
+            }
+        }
+        return isTrue;
     }
     
     /*

@@ -30,10 +30,15 @@ public class KnowledgeBase {
             Iterator<Clause> outer = clauseSelectionOrder.iterator();
             while(outer.hasNext()) {
                 Clause first = outer.next();
+                if(first.isTrue()) {
+                    continue;
+                }
                 Iterator<Clause> inner = clauseSelectionOrder.iterator();
                 while(inner.hasNext()) {
                     Clause second = inner.next();
-                    
+                    if(second.isTrue()) {
+                        continue;
+                    }
                     if(Clause.resolvable(first, second) && !isResolved(first, second)) {
                         // System.out.println(String.format("Resolving: %s and %s", first, second));
                         Clause child = resolve(first, second);
@@ -72,15 +77,19 @@ public class KnowledgeBase {
         HashSet<Literal> combi = new HashSet<>();
         combi.addAll(xLits);
         combi.addAll(yLits);
-        
+        boolean found = false;
         Clause c = null;
         for(Literal xLit : xLits) {
             for(Literal yLit : yLits) {
                 if(xLit.getOpposite().equals(yLit)) {
                     combi.remove(xLit);
                     combi.remove(yLit);
+                    found = true;
+                    break;
                 }
             }
+            if(found)
+                break;
         }
         
         c = new Clause(combi);
